@@ -1,0 +1,672 @@
+You are an expert Senior Frontend Engineer, Senior UI/UX Designer, Travel Product Designer, SEO Specialist, and Performance Engineer.
+
+Your task is to build a production-quality tourism platform for an internship project called Drive KKTC.
+
+This is NOT a simple assignment website.
+
+It should feel like a modern travel product similar in quality to Airbnb Experiences, Visit Iceland, Visit Scotland, or premium tourism websites.
+
+The goal is to create a website that tourists would genuinely use to explore Northern Cyprus.
+
+The project should impress experienced developers, designers, and instructors.
+
+⸻
+
+Tech Stack
+
+Use:
+
+* React 19
+* Vite
+* TailwindCSS
+* Framer Motion
+* React Router
+* Leaflet (or MapLibre if better)
+* Lucide React Icons
+* React Intersection Observer
+* React Helmet Async
+* TypeScript preferred
+* Responsive-first design
+
+Follow modern component architecture.
+
+⸻
+
+Design Philosophy
+
+The design should be premium.
+
+Avoid Bootstrap.
+
+Avoid generic templates.
+
+Avoid AI-looking layouts.
+
+Use:
+
+Large whitespace
+
+Excellent typography
+
+Soft shadows
+
+Rounded corners
+
+Glassmorphism where appropriate
+
+Subtle gradients
+
+Smooth animations
+
+High quality spacing
+
+Elegant transitions
+
+Modern cards
+
+Beautiful hover effects
+
+The design should feel expensive.
+
+⸻
+
+Color Palette
+
+Primary:
+
+Deep Mediterranean Blue
+
+Sea Green
+
+Warm Sand
+
+White
+
+Accent:
+
+Golden Sunset Orange
+
+Dark Slate
+
+Use gradients carefully.
+
+⸻
+
+Overall Experience
+
+The user should feel like they are planning a real road trip.
+
+The page should tell a story.
+
+Scrolling should feel immersive.
+
+Every section should have purpose.
+
+⸻
+
+Pages
+
+Home
+
+Routes
+
+Individual Route Page
+
+About
+
+Contact
+
+404
+
+⸻
+
+Homepage
+
+Create a stunning hero section.
+
+Include:
+
+Large hero image/video
+
+Headline
+
+Subtitle
+
+CTA buttons
+
+Animated scroll indicator
+
+Statistics
+
+Featured routes
+
+Destination categories
+
+Why Drive KKTC
+
+Interactive map preview
+
+Testimonials
+
+Photo gallery
+
+Newsletter
+
+Footer
+
+⸻
+
+Route Listing Page
+
+Grid layout
+
+Search
+
+Sorting
+
+Filtering
+
+Categories
+
+Difficulty
+
+Duration
+
+Distance
+
+Best season
+
+Photography
+
+History
+
+Nature
+
+Food
+
+Family Friendly
+
+Map view toggle
+
+⸻
+
+Individual Route Page
+
+This is the most important page.
+
+Build a professional travel guide.
+
+Include:
+
+Hero Image
+
+Breadcrumb
+
+Route Overview
+
+Interactive Map
+
+Timeline
+
+Quick Facts
+
+Estimated Duration
+
+Distance
+
+Budget
+
+Difficulty
+
+Elevation
+
+Weather
+
+Best Season
+
+⸻
+
+Stops
+
+Each stop should have:
+
+Large image
+
+Description
+
+History
+
+Interesting facts
+
+Coordinates
+
+Opening hours
+
+Entry fee
+
+Parking information
+
+Accessibility
+
+Time required
+
+Photography tips
+
+Nearby restaurants
+
+Nearby attractions
+
+Directions button
+
+Google Maps link
+
+⸻
+
+Interactive Timeline
+
+Morning
+
+↓
+
+Late Morning
+
+↓
+
+Lunch
+
+↓
+
+Afternoon
+
+↓
+
+Golden Hour
+
+↓
+
+Sunset
+
+↓
+
+Night
+
+Animated while scrolling.
+
+⸻
+
+Route Statistics
+
+Animated counters.
+
+Distance
+
+Driving Time
+
+Walking Time
+
+Number of Stops
+
+Historical Sites
+
+Photo Spots
+
+Restaurants
+
+Fuel Stops
+
+⸻
+
+Interactive Map
+
+Use Leaflet.
+
+Each stop should have:
+
+Custom marker
+
+Popup
+
+Image
+
+Short description
+
+Navigate button
+
+Highlight on hover.
+
+⸻
+
+Travel Tips
+
+Cards:
+
+What to bring
+
+Weather
+
+Safety
+
+Driving advice
+
+Currency
+
+Emergency numbers
+
+Fuel stations
+
+Internet coverage
+
+Best viewpoints
+
+Hidden gems
+
+⸻
+
+Insider Tips
+
+Dedicated section.
+
+Include local recommendations.
+
+Avoid tourist traps.
+
+Photography locations.
+
+Best sunset locations.
+
+Least crowded times.
+
+⸻
+
+Nearby Attractions
+
+Cards
+
+Distance away
+
+Estimated driving time
+
+⸻
+
+Gallery
+
+Beautiful masonry layout.
+
+Lightbox.
+
+Keyboard navigation.
+
+Touch gestures.
+
+Lazy loading.
+
+⸻
+
+FAQ
+
+Accordion
+
+SEO optimized.
+
+⸻
+
+Related Routes
+
+Recommend similar routes.
+
+⸻
+
+Navigation
+
+Sticky
+
+Transparent initially
+
+Changes on scroll
+
+Mobile drawer
+
+Smooth transitions
+
+⸻
+
+Footer
+
+Social Links
+
+Newsletter
+
+Useful Links
+
+Copyright
+
+Quick Navigation
+
+⸻
+
+Animations
+
+Framer Motion only.
+
+Use:
+
+Fade
+
+Slide
+
+Parallax
+
+Scroll reveal
+
+Animated counters
+
+Hover lift
+
+Image zoom
+
+Timeline animations
+
+Section transitions
+
+Do NOT overdo animations.
+
+Performance comes first.
+
+⸻
+
+Responsive Design
+
+Desktop
+
+Laptop
+
+Tablet
+
+Phone
+
+Landscape
+
+Everything must look perfect.
+
+Mobile should feel like a native travel app.
+
+⸻
+
+Accessibility
+
+WCAG AA
+
+Keyboard navigation
+
+ARIA labels
+
+Screen reader support
+
+Proper heading hierarchy
+
+Focus states
+
+Color contrast
+
+⸻
+
+SEO
+
+Perfect semantic HTML.
+
+Meta Title
+
+Meta Description
+
+Open Graph
+
+Twitter Cards
+
+JSON-LD structured data
+
+Breadcrumb schema
+
+Tourist attraction schema where applicable
+
+Sitemap ready
+
+Robots ready
+
+Canonical URLs
+
+Optimized URLs
+
+⸻
+
+Performance
+
+Target:
+
+95+ Lighthouse Performance
+
+100 Accessibility
+
+100 Best Practices
+
+100 SEO
+
+Lazy load images
+
+Code splitting
+
+Route splitting
+
+Image optimization
+
+Prefetching
+
+⸻
+
+Folder Structure
+
+Use scalable architecture.
+
+Components
+
+Layouts
+
+Pages
+
+Hooks
+
+Utils
+
+Services
+
+Assets
+
+Data
+
+Context
+
+Types
+
+Animations
+
+SEO
+
+Constants
+
+⸻
+
+Code Quality
+
+Strict TypeScript
+
+Reusable components
+
+No duplicated code
+
+Proper naming
+
+Clean architecture
+
+Maintainability
+
+Scalability
+
+Comments only where necessary.
+
+⸻
+
+UI Details
+
+Animated buttons
+
+Skeleton loading
+
+Toast notifications
+
+Hover states
+
+Smooth scrolling
+
+Back to top
+
+Scroll progress indicator
+
+Floating action button
+
+Dark mode toggle
+
+Copy route button
+
+Share route button
+
+Print itinerary
+
+Download itinerary PDF placeholder
+
+Favorite route button
+
+⸻
+
+Content
+
+Do NOT use lorem ipsum.
+
+Use realistic travel content.
+
+Write naturally.
+
+Avoid repetitive AI wording.
+
+Every section should feel written by a travel writer.
+
+⸻
+
+Final Goal
+
+Imagine this project is being judged by:
+
+* Senior Frontend Engineers
+* UI/UX Designers
+* Tourism professionals
+* University lecturers
+
+The final product should be portfolio-quality and feel like a real tourism platform rather than an internship assignment.
