@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Drive KKTC"
+version = "1.0.0"
+id = "artifacts/drive-kktc"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25225
+
+[services.development]
+run = "pnpm --filter @workspace/drive-kktc run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/drive-kktc", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/drive-kktc/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25225"
+BASE_PATH = "/"
