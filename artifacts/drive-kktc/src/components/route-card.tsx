@@ -6,6 +6,7 @@ import { Clock, Map, TrendingUp, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useFavorites } from "@/hooks/use-favorites";
+import { getRouteCover } from "@/data/route-media";
 
 // Map lucide icons from strings
 import * as LucideIcons from "lucide-react";
@@ -31,11 +32,7 @@ export function RouteCard({ route, index = 0, className }: RouteCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite(route.id);
 
-  // Select image based on first category to give it a nice aesthetic
-  let bgImage = "/attached_assets/generated_images/hero-bg.jpg"; // fallback
-  if (route.category.includes("History")) bgImage = "/attached_assets/generated_images/category-history.jpg";
-  else if (route.category.includes("Nature") || route.category.includes("Coastline")) bgImage = "/attached_assets/generated_images/category-nature.jpg";
-  else if (route.category.includes("Villages")) bgImage = "/attached_assets/generated_images/about-bg.jpg";
+  const bgImage = getRouteCover(route);
 
   return (
     <motion.div

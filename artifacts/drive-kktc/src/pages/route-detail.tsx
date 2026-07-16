@@ -24,6 +24,8 @@ import { RouteCard } from "@/components/route-card";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useFavorites } from "@/hooks/use-favorites";
+import { getRouteCover, getStopPhotos } from "@/data/route-media";
+import { StopPhotoGallery } from "@/components/stop-photo-gallery";
 
 function getTimeBlock(index: number, total: number) {
   const ratio = index / Math.max(total - 1, 1);
@@ -103,11 +105,7 @@ export default function RouteDetail() {
   };
   const Icon = getIconComponent(route.icon);
 
-  // Background image based on category
-  let bgImage = "/attached_assets/generated_images/hero-bg.jpg";
-  if (route.category.includes("History")) bgImage = "/attached_assets/generated_images/category-history.jpg";
-  else if (route.category.includes("Nature") || route.category.includes("Coastline")) bgImage = "/attached_assets/generated_images/category-nature.jpg";
-  else if (route.category.includes("Villages")) bgImage = "/attached_assets/generated_images/about-bg.jpg";
+  const bgImage = getRouteCover(route);
 
   // Compute live facts
   const freeStops = route.stops.filter(s => s.entryFee.toLowerCase().includes("free")).length;
@@ -139,10 +137,10 @@ export default function RouteDetail() {
       {/* Hero */}
       <header className="relative pt-32 pb-24 md:pt-48 md:pb-32 bg-muted overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30 z-0"
+          className="absolute inset-0 bg-cover bg-center opacity-60 z-0"
           style={{ backgroundImage: `url(${bgImage})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/65 via-background/85 to-background z-0" />
         
         <div className="container relative z-10 mx-auto px-4 md:px-6">
           <div className="flex justify-between items-center mb-8">
@@ -259,6 +257,8 @@ export default function RouteDetail() {
                         </a>
                       </Button>
                     </div>
+
+                    <StopPhotoGallery title={stop.name} photos={getStopPhotos(route, stop)} />
                     
                     <p className="text-foreground/80 leading-relaxed mb-6 font-medium text-lg">
                       {stop.description}
