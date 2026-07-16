@@ -7,7 +7,8 @@ import { Helmet } from "react-helmet-async";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { 
   Map, Clock, Route as RouteIcon, ShieldAlert, Calendar, Banknote, 
-  ChevronDown, ArrowLeft, ArrowUpRight, CheckCircle2, Navigation
+  ChevronDown, ArrowLeft, ArrowUpRight, CheckCircle2, Navigation,
+  Share2, Printer, Copy, Utensils, Camera, Heart
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,16 @@ import {
 } from "@/components/ui/accordion";
 import { RouteCard } from "@/components/route-card";
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { useFavorites } from "@/hooks/use-favorites";
+
+function getTimeBlock(index: number, total: number) {
+  const ratio = index / Math.max(total - 1, 1);
+  if (ratio < 0.3) return "Morning";
+  if (ratio < 0.55) return "Midday";
+  if (ratio < 0.8) return "Afternoon";
+  return "Evening";
+}
 
 export default function RouteDetail() {
   const { slug } = useParams();
@@ -33,6 +44,8 @@ export default function RouteDetail() {
   });
 
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const { toast } = useToast();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,9 +59,39 @@ export default function RouteDetail() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${route?.title} | Drive KKTC`,
+          url: url
+        });
+      } catch (err) {
+        console.error("Error sharing", err);
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    toast({
+      title: "Link copied",
+      description: "Route link copied to clipboard.",
+    });
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
   if (!route) {
     return <NotFound />;
   }
+
+  const isFav = isFavorite(route.id);
 
   const getIconComponent = (iconName: string) => {
     const pascalName = iconName
@@ -65,6 +108,12 @@ export default function RouteDetail() {
   if (route.category.includes("History")) bgImage = "/attached_assets/generated_images/category-history.jpg";
   else if (route.category.includes("Nature") || route.category.includes("Coastline")) bgImage = "/attached_assets/generated_images/category-nature.jpg";
   else if (route.category.includes("Villages")) bgImage = "/attached_assets/generated_images/about-bg.jpg";
+
+  // Compute live facts
+  const freeStops = route.stops.filter(s => s.entryFee.toLowerCase().includes("free")).length;
+  const paidStops = route.stops.length - freeStops;
+  const distinctRestaurants = new Set(route.stops.map(s => s.nearbyRestaurant).filter(r => !r.toLowerCase().includes("no facilities") && !r.toLowerCase().includes("bring"))).size;
+  const distinctAttractions = new Set(route.stops.map(s => s.nearbyAttraction)).size;
 
   // Get related routes (simple algo: share category, exclude current)
   const relatedRoutes = routes
@@ -96,9 +145,24 @@ export default function RouteDetail() {
         <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background z-0" />
         
         <div className="container relative z-10 mx-auto px-4 md:px-6">
-          <Link href="/routes" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8 group">
-            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" /> Back to routes
-          </Link>
+          <div className="flex justify-between items-center mb-8">
+            <Link href="/routes" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors group">
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" /> Back to routes
+            </Link>
+            
+            <div className="flex items-center gap-2 print-hidden">
+              <Button variant="outline" size="sm" onClick={() => toggleFavorite(route.id)} className="bg-background/20 hover:bg-background/40 border-background/20 backdrop-blur-sm text-foreground">
+                <Heart className={isFav ? "w-4 h-4 mr-2 fill-destructive text-destructive" : "w-4 h-4 mr-2"} />
+                {isFav ? "Saved" : "Save"}
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleShare} className="bg-background/20 hover:bg-background/40 border-background/20 backdrop-blur-sm text-foreground">
+                <Share2 className="w-4 h-4 mr-2" /> Share
+              </Button>
+              <Button variant="outline" size="sm" onClick={handlePrint} className="bg-background/20 hover:bg-background/40 border-background/20 backdrop-blur-sm text-foreground hidden sm:flex">
+                <Printer className="w-4 h-4 mr-2" /> Print
+              </Button>
+            </div>
+          </div>
           
           <div className="flex flex-col md:flex-row gap-8 items-start justify-between">
             <div className="max-w-3xl">
@@ -121,6 +185,13 @@ export default function RouteDetail() {
                 <li className="flex items-center gap-3"><Calendar className="w-5 h-5 text-accent" /> <span className="font-medium text-sm">{route.bestSeason}</span></li>
                 <li className="flex items-center gap-3"><Banknote className="w-5 h-5 text-accent" /> <span className="font-medium text-sm">{route.budget}</span></li>
               </ul>
+              <div className="mt-6 pt-4 border-t border-border/50 flex flex-wrap gap-2">
+                <Badge variant="secondary" className="font-normal text-xs">{route.stops.length} stops</Badge>
+                {freeStops > 0 && <Badge variant="secondary" className="font-normal text-xs">{freeStops} free entry</Badge>}
+                {paidStops > 0 && <Badge variant="secondary" className="font-normal text-xs">{paidStops} paid entry</Badge>}
+                {distinctRestaurants > 0 && <Badge variant="secondary" className="font-normal text-xs">{distinctRestaurants} local eats</Badge>}
+                {distinctAttractions > 0 && <Badge variant="secondary" className="font-normal text-xs">{distinctAttractions} nearby spots</Badge>}
+              </div>
             </div>
           </div>
         </div>
@@ -148,15 +219,28 @@ export default function RouteDetail() {
             <h2 className="font-serif text-3xl font-bold mb-10">The Itinerary</h2>
             
             <div className="relative border-l border-border/50 ml-4 md:ml-6 space-y-16 pb-8">
-              {route.stops.map((stop, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.5 }}
-                  className="relative pl-8 md:pl-12"
-                >
+              {route.stops.map((stop, index) => {
+                const timeBlock = getTimeBlock(index, route.stops.length);
+                const prevTimeBlock = index > 0 ? getTimeBlock(index - 1, route.stops.length) : null;
+                const showTimeBlock = timeBlock !== prevTimeBlock;
+
+                return (
+                  <div key={index}>
+                    {showTimeBlock && (
+                      <div className="relative flex items-center mb-8 -ml-8 md:-ml-10 break-before">
+                        <div className="bg-background border-2 border-primary text-primary font-serif font-bold px-4 py-1.5 rounded-full text-sm shadow-sm z-10">
+                          {timeBlock}
+                        </div>
+                        <div className="h-px bg-border flex-1 ml-4" />
+                      </div>
+                    )}
+                    <motion.div 
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: "-100px" }}
+                      transition={{ duration: 0.5 }}
+                      className="relative pl-8 md:pl-12 stop-item"
+                    >
                   {/* Timeline Node */}
                   <div className="absolute w-8 h-8 rounded-full bg-primary flex items-center justify-center -left-4 top-0 border-4 border-background shadow-sm text-primary-foreground font-bold text-sm">
                     {index + 1}
@@ -229,7 +313,9 @@ export default function RouteDetail() {
                     </div>
                   </div>
                 </motion.div>
-              ))}
+              </div>
+              );
+            })}
             </div>
           </div>
 

@@ -2,9 +2,10 @@ import { Link } from "wouter";
 import { RouteData } from "@/data/routes";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Map, TrendingUp } from "lucide-react";
+import { Clock, Map, TrendingUp, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useFavorites } from "@/hooks/use-favorites";
 
 // Map lucide icons from strings
 import * as LucideIcons from "lucide-react";
@@ -27,6 +28,8 @@ interface RouteCardProps {
 
 export function RouteCard({ route, index = 0, className }: RouteCardProps) {
   const Icon = getIconComponent(route.icon);
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const fav = isFavorite(route.id);
 
   // Select image based on first category to give it a nice aesthetic
   let bgImage = "/attached_assets/generated_images/hero-bg.jpg"; // fallback
@@ -42,7 +45,7 @@ export function RouteCard({ route, index = 0, className }: RouteCardProps) {
       className={cn("h-full", className)}
     >
       <Link href={`/routes/${route.slug}`}>
-        <Card className="h-full overflow-hidden border-border/50 group cursor-pointer hover:border-primary/30 transition-all duration-500 bg-card hover:shadow-xl hover:shadow-primary/5 rounded-xl">
+        <Card className="h-full overflow-hidden border-border/50 group cursor-pointer hover:border-primary/30 transition-all duration-500 bg-card hover:shadow-xl hover:shadow-primary/5 rounded-xl relative">
           <div className="relative h-48 overflow-hidden bg-muted">
             <div 
               className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
@@ -56,6 +59,12 @@ export function RouteCard({ route, index = 0, className }: RouteCardProps) {
                 </Badge>
               ))}
             </div>
+            <button 
+              onClick={(e) => { e.preventDefault(); toggleFavorite(route.id); }}
+              className="absolute top-4 right-4 p-2 bg-background/50 backdrop-blur-md rounded-full text-foreground hover:bg-background/80 transition-colors z-10"
+            >
+              <Heart className={cn("w-4 h-4", fav ? "fill-destructive text-destructive" : "text-foreground")} />
+            </button>
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
               <div className="bg-primary p-2 rounded-full shadow-lg shadow-black/20">
                 <Icon className="w-5 h-5 text-primary-foreground" />

@@ -1,12 +1,14 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Layout } from "@/components/layout";
 import { RouteCard } from "@/components/route-card";
 import { MapView } from "@/components/map-view";
 import { routes, Category, Difficulty } from "@/data/routes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Map as MapIcon, Grid3X3, SlidersHorizontal, Compass } from "lucide-react";
+import { Search, Map as MapIcon, Grid3X3, SlidersHorizontal, Compass, Heart } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { useLocation } from "wouter";
+import { useFavorites } from "@/hooks/use-favorites";
 import { 
   Select, 
   SelectContent, 
@@ -29,12 +31,28 @@ export default function RoutesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
+  const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const { isFavorite } = useFavorites();
+
+  const [location] = useLocation();
+
+  useEffect(() => {
+    // Basic query string parsing since wouter doesn't have a built-in hook for it
+    const search = window.location.search;
+    if (search.includes("saved=true")) {
+      setShowSavedOnly(true);
+    } else {
+      setShowSavedOnly(false);
+    }
+  }, [location]);
 
   const allCategories = Array.from(new Set(routes.flatMap(r => r.category))).sort();
   const allDifficulties = ["Easy", "Moderate", "Challenging"];
 
   const filteredRoutes = useMemo(() => {
     return routes.filter(route => {
+      if (showSavedOnly && !isFavorite(route.id)) return false;
+
       const matchesSearch = route.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                             route.tagline.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCat = selectedCategory === "all" || route.category.includes(selectedCategory as Category);
@@ -42,7 +60,7 @@ export default function RoutesPage() {
       
       return matchesSearch && matchesCat && matchesDiff;
     });
-  }, [searchQuery, selectedCategory, selectedDifficulty]);
+  }, [searchQuery, selectedCategory, selectedDifficulty, showSavedOnly, isFavorite]);
 
   return (
     <Layout>
@@ -53,13 +71,26 @@ export default function RoutesPage() {
 
       <div className="bg-background pt-28 pb-8 border-b border-border/50">
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-3xl mb-8">
-            <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4 tracking-tight text-foreground">
-              The Itineraries
-            </h1>
-            <p className="text-lg text-foreground/70 leading-relaxed">
-              Find the perfect road trip. From easy half-day coastal cruises to challenging mountain ascents.
-            </p>
+          <div className="max-w-3xl mb-8 flex justify-between items-start">
+            <div>
+              <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4 tracking-tight text-foreground flex items-center gap-3">
+                {showSavedOnly ? (
+                  <><Heart className="w-8 h-8 text-destructive fill-destructive" /> Saved Routes</>
+                ) : (
+                  "The Itineraries"
+                )}
+              </h1>
+              <p className="text-lg text-foreground/70 leading-relaxed">
+                {showSavedOnly 
+                  ? "Your personal collection of routes saved for later." 
+                  : "Find the perfect road trip. From easy half-day coastal cruises to challenging mountain ascents."}
+              </p>
+            </div>
+            {showSavedOnly && (
+              <Button variant="outline" asChild>
+                <a href="/routes">View All Routes</a>
+              </Button>
+            )}
           </div>
 
           {/* Filters Bar */}

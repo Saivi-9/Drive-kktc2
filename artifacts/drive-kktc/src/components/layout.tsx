@@ -1,8 +1,9 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Menu, X, Instagram, Twitter, Compass } from "lucide-react";
+import { Menu, X, Instagram, Twitter, Compass, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -18,7 +19,8 @@ export function Navbar() {
   }, []);
 
   const links = [
-    { href: "/routes", label: "Routes" },
+    { href: "/explore", label: "Explore" },
+    { href: "/routes", label: "All Routes" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ];
@@ -26,10 +28,10 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 print-hidden",
         isScrolled
-          ? "bg-background/80 backdrop-blur-md border-b border-border py-4"
-          : "bg-transparent py-6"
+          ? "bg-background/80 backdrop-blur-md border-b border-border py-4 shadow-sm"
+          : "bg-background/40 backdrop-blur-sm py-6"
       )}
     >
       <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
@@ -56,15 +58,27 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
+          <div className="h-4 w-px bg-border"></div>
+          <Link
+            href="/routes?saved=true"
+            className="text-foreground/70 hover:text-foreground transition-colors flex items-center gap-1.5 text-sm font-medium"
+            title="My Saved Routes"
+          >
+            <Heart className="w-4 h-4" /> Saved
+          </Link>
+          <ThemeToggle />
         </nav>
 
         {/* Mobile Toggle */}
-        <button
-          className="md:hidden p-2 text-foreground"
-          onClick={() => setMobileMenuOpen(true)}
-        >
-          <Menu className="w-6 h-6" />
-        </button>
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="p-2 text-foreground"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -104,6 +118,14 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <div className="h-px w-12 bg-border my-2"></div>
+              <Link
+                href="/routes?saved=true"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-serif text-foreground/70 transition-colors flex items-center gap-2"
+              >
+                <Heart className="w-5 h-5" /> Saved Routes
+              </Link>
             </nav>
           </motion.div>
         )}
@@ -114,7 +136,7 @@ export function Navbar() {
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background py-12 mt-auto">
+    <footer className="bg-foreground text-background py-12 mt-auto print-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2 space-y-4">
@@ -132,10 +154,10 @@ export function Footer() {
           <div>
             <h4 className="font-serif font-semibold mb-4 text-accent">Explore</h4>
             <ul className="space-y-2 text-sm text-background/70">
+              <li><Link href="/explore" className="hover:text-background transition-colors">Thematic Collections</Link></li>
               <li><Link href="/routes" className="hover:text-background transition-colors">All Routes</Link></li>
               <li><Link href="/routes/forgotten-kingdoms" className="hover:text-background transition-colors">Forgotten Kingdoms</Link></li>
               <li><Link href="/routes/hidden-coastline" className="hover:text-background transition-colors">Hidden Coastline</Link></li>
-              <li><Link href="/routes/secret-villages" className="hover:text-background transition-colors">Secret Villages</Link></li>
             </ul>
           </div>
           <div>
