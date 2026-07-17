@@ -18,6 +18,16 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileMenuOpen]);
+
   const links = [
     { href: "/explore", label: "Explore" },
     { href: "/routes", label: "All Routes" },
@@ -85,48 +95,69 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-50 bg-background flex flex-col pt-6 px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 z-[60] bg-foreground/35 backdrop-blur-[2px]"
           >
-            <div className="flex items-center justify-between mb-12">
-              <div className="flex items-center gap-2">
-                <Compass className="w-6 h-6 text-primary" />
-                <span className="font-serif font-semibold text-xl">Drive KKTC</span>
-              </div>
-              <button
-                className="p-2 text-foreground"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-6 items-center">
-              {links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={cn(
-                    "text-2xl font-serif transition-colors",
-                    location.startsWith(link.href)
-                      ? "text-primary"
-                      : "text-foreground/70"
-                  )}
-                >
-                  {link.label}
+            <motion.aside
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              onClick={(event) => event.stopPropagation()}
+              className="ml-auto flex h-[100dvh] w-[min(22rem,calc(100vw-1.25rem))] flex-col border-l border-border bg-background px-6 py-6 text-foreground shadow-2xl"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+            >
+              <div className="flex items-center justify-between">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2">
+                  <Compass className="w-6 h-6 text-primary" />
+                  <span className="font-serif font-semibold text-xl">Drive KKTC</span>
                 </Link>
-              ))}
-              <div className="h-px w-12 bg-border my-2"></div>
-              <Link
-                href="/routes?saved=true"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-2xl font-serif text-foreground/70 transition-colors flex items-center gap-2"
-              >
-                <Heart className="w-5 h-5" /> Saved Routes
-              </Link>
-            </nav>
+                <button
+                  className="rounded-full p-2 text-foreground transition-colors hover:bg-muted"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close menu"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <nav className="mt-12 flex flex-col gap-2">
+                {links.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "rounded-xl px-4 py-3 font-serif text-2xl transition-colors",
+                      location.startsWith(link.href)
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground/80 hover:bg-muted hover:text-foreground"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="mt-6 border-t border-border pt-6">
+                <Link
+                  href="/routes?saved=true"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Heart className="w-5 h-5" /> Saved Routes
+                </Link>
+              </div>
+
+              <p className="mt-auto pt-8 text-xs leading-relaxed text-muted-foreground">
+                Curated self-drive itineraries for exploring Northern Cyprus.
+              </p>
+            </motion.aside>
           </motion.div>
         )}
       </AnimatePresence>
