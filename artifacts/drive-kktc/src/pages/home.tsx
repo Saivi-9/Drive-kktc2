@@ -4,7 +4,7 @@ import { RouteCard } from "@/components/route-card";
 import { routes } from "@/data/routes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Compass, Map, Sun, Clock, Quote, Mail } from "lucide-react";
+import { ArrowRight, Compass, Map, Sun, Clock, Quote, Mail, Sparkles } from "lucide-react";
 import { motion, useInView } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import { useRef, useState, useEffect } from "react";
@@ -143,7 +143,7 @@ export default function Home() {
               <Link href="/routes">Start Exploring</Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="rounded-full text-base h-14 px-8 bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-md">
-              <Link href="/about">Our Story</Link>
+              <Link href="/finder"><Sparkles className="w-4 h-4 mr-2" />Find My Route</Link>
             </Button>
           </motion.div>
         </div>

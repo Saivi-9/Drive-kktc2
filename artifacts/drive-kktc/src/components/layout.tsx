@@ -30,6 +30,8 @@ export function Navbar() {
 
   const links = [
     { href: "/explore", label: "Explore" },
+    { href: "/finder", label: "Route Finder" },
+    { href: "/planner", label: "Planner" },
     { href: "/routes", label: "All Routes" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
@@ -187,6 +189,8 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-background/70">
               <li><Link href="/explore" className="hover:text-background transition-colors">Thematic Collections</Link></li>
               <li><Link href="/routes" className="hover:text-background transition-colors">All Routes</Link></li>
+              <li><Link href="/finder" className="hover:text-background transition-colors">Route Finder</Link></li>
+              <li><Link href="/planner" className="hover:text-background transition-colors">Day Planner</Link></li>
               <li><Link href="/routes/forgotten-kingdoms" className="hover:text-background transition-colors">Forgotten Kingdoms</Link></li>
               <li><Link href="/routes/hidden-coastline" className="hover:text-background transition-colors">Hidden Coastline</Link></li>
             </ul>

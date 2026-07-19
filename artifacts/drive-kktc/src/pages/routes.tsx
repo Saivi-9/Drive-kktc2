@@ -32,6 +32,7 @@ export default function RoutesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
   const [showSavedOnly, setShowSavedOnly] = useState(false);
+  const [quickFilter, setQuickFilter] = useState<"all" | "short" | "family" | "coast" | "free">("all");
   const { isFavorite } = useFavorites();
 
   const [location] = useLocation();
@@ -57,10 +58,15 @@ export default function RoutesPage() {
                             route.tagline.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCat = selectedCategory === "all" || route.category.includes(selectedCategory as Category);
       const matchesDiff = selectedDifficulty === "all" || route.difficulty === selectedDifficulty as Difficulty;
+      const matchesQuick = quickFilter === "all" ||
+        (quickFilter === "short" && route.drivingTimeHours <= 2.5) ||
+        (quickFilter === "family" && route.category.includes("Family Friendly")) ||
+        (quickFilter === "coast" && route.category.includes("Coastline")) ||
+        (quickFilter === "free" && route.stops.some(stop => stop.entryFee.toLowerCase().includes("free")));
       
-      return matchesSearch && matchesCat && matchesDiff;
+      return matchesSearch && matchesCat && matchesDiff && matchesQuick;
     });
-  }, [searchQuery, selectedCategory, selectedDifficulty, showSavedOnly, isFavorite]);
+  }, [searchQuery, selectedCategory, selectedDifficulty, showSavedOnly, quickFilter, isFavorite]);
 
   return (
     <Layout>
@@ -189,6 +195,9 @@ export default function RoutesPage() {
                 </Button>
               </div>
             </div>
+          </div>
+          <div className="flex gap-2 overflow-x-auto mt-4 pb-1">
+            {([['all', 'All routes'], ['short', 'Short drives'], ['family', 'Family-friendly'], ['coast', 'Swimming & coast'], ['free', 'Free stops']] as const).map(([value, label]) => <Button key={value} variant={quickFilter === value ? "secondary" : "outline"} size="sm" className="rounded-full shrink-0" onClick={() => setQuickFilter(value)}>{label}</Button>)}
           </div>
         </div>
       </div>

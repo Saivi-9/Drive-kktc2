@@ -8,7 +8,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { 
   Map, Clock, Route as RouteIcon, ShieldAlert, Calendar, Banknote, 
   ChevronDown, ArrowLeft, ArrowUpRight, CheckCircle2, Navigation,
-  Share2, Printer, Copy, Utensils, Camera, Heart
+  Share2, Printer, Copy, Utensils, Camera, Heart, Check
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useFavorites } from "@/hooks/use-favorites";
 import { getRouteCover, getStopPhotos } from "@/data/route-media";
 import { StopPhotoGallery } from "@/components/stop-photo-gallery";
+import { useVisitedStops } from "@/hooks/use-visited-stops";
 
 function getTimeBlock(index: number, total: number) {
   const ratio = index / Math.max(total - 1, 1);
@@ -48,6 +49,7 @@ export default function RouteDetail() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const { toast } = useToast();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { visited, toggleVisited } = useVisitedStops(route?.id ?? "unknown-route");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -215,6 +217,9 @@ export default function RouteDetail() {
           {/* Timeline / Itinerary */}
           <div className="lg:col-span-8">
             <h2 className="font-serif text-3xl font-bold mb-10">The Itinerary</h2>
+            <div className="mb-8 rounded-xl bg-primary/5 border border-primary/10 px-5 py-3 flex items-center justify-between text-sm">
+              <span className="font-medium">Road progress</span><span className="text-muted-foreground">{visited.length} of {route.stops.length} stops visited</span>
+            </div>
             
             <div className="relative border-l border-border/50 ml-4 md:ml-6 space-y-16 pb-8">
               {route.stops.map((stop, index) => {
@@ -247,7 +252,7 @@ export default function RouteDetail() {
                   <div className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-4">
                       <h3 className="font-serif text-2xl font-bold text-primary">{stop.name}</h3>
-                      <Button variant="outline" size="sm" asChild className="shrink-0 group">
+                      <div className="flex gap-2"><Button variant={visited.includes(index) ? "secondary" : "outline"} size="sm" className="shrink-0" onClick={() => toggleVisited(index)}><Check className="w-4 h-4 mr-1" />{visited.includes(index) ? "Visited" : "Mark visited"}</Button><Button variant="outline" size="sm" asChild className="shrink-0 group">
                         <a 
                           href={`https://www.google.com/maps/dir/?api=1&destination=${stop.coordinates[0]},${stop.coordinates[1]}`}
                           target="_blank"
@@ -256,6 +261,7 @@ export default function RouteDetail() {
                           <Navigation className="w-4 h-4 mr-2 group-hover:text-primary transition-colors" /> Navigate
                         </a>
                       </Button>
+                      </div>
                     </div>
 
                     <StopPhotoGallery title={stop.name} photos={getStopPhotos(route, stop)} />

@@ -12,6 +12,8 @@ import RouteDetail from '@/pages/route-detail';
 import ExplorePage from '@/pages/explore';
 import AboutPage from '@/pages/about';
 import ContactPage from '@/pages/contact';
+import RouteFinder from '@/pages/route-finder';
+import Planner from '@/pages/planner';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
@@ -25,6 +27,8 @@ function Router() {
         <Route path="/explore" component={ExplorePage} />
         <Route path="/routes" component={RoutesPage} />
         <Route path="/routes/:slug" component={RouteDetail} />
+        <Route path="/finder" component={RouteFinder} />
+        <Route path="/planner" component={Planner} />
         <Route path="/about" component={AboutPage} />
         <Route path="/contact" component={ContactPage} />
         <Route component={NotFound} />
