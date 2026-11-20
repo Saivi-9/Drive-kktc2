@@ -7,7 +7,10 @@ export function useFavorites() {
     try {
       const stored = localStorage.getItem("drivekktc-favorites");
       if (stored) {
-        setFavorites(JSON.parse(stored));
+        const parsed: unknown = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.every((item): item is string => typeof item === "string")) {
+          setFavorites(parsed);
+        }
       }
     } catch (e) {
       console.error("Failed to read favorites from localStorage", e);

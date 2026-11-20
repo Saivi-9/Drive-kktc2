@@ -7,7 +7,12 @@ export function useVisitedStops(routeId: string) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(key);
-      if (saved) setVisited(JSON.parse(saved));
+      if (saved) {
+        const parsed: unknown = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.every((item): item is number => typeof item === "number")) {
+          setVisited(parsed);
+        }
+      }
     } catch {
       // A private browsing session can block local storage; progress is optional.
     }
@@ -21,5 +26,10 @@ export function useVisitedStops(routeId: string) {
     });
   };
 
-  return { visited, toggleVisited };
+  const clearVisited = () => {
+    setVisited([]);
+    try { localStorage.removeItem(key); } catch { /* optional persistence */ }
+  };
+
+  return { visited, toggleVisited, clearVisited };
 }
