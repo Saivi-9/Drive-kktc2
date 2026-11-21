@@ -9,7 +9,7 @@ export function useFavorites() {
       if (stored) {
         const parsed: unknown = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.every((item): item is string => typeof item === "string")) {
-          setFavorites(parsed);
+          setFavorites(Array.from(new Set(parsed.map((id) => id.trim()).filter(Boolean))));
         }
       }
     } catch (e) {
@@ -18,10 +18,12 @@ export function useFavorites() {
   }, []);
 
   const toggleFavorite = (routeId: string) => {
+    const normalizedId = routeId.trim();
+    if (!normalizedId) return;
     setFavorites((prev) => {
-      const newFavs = prev.includes(routeId)
-        ? prev.filter((id) => id !== routeId)
-        : [...prev, routeId];
+      const newFavs = prev.includes(normalizedId)
+        ? prev.filter((id) => id !== normalizedId)
+        : [...prev, normalizedId];
       
       try {
         localStorage.setItem("drivekktc-favorites", JSON.stringify(newFavs));
@@ -33,7 +35,16 @@ export function useFavorites() {
     });
   };
 
-  const isFavorite = (routeId: string) => favorites.includes(routeId);
+  const clearFavorites = () => {
+    setFavorites([]);
+    try {
+      localStorage.removeItem("drivekktc-favorites");
+    } catch (e) {
+      console.error("Failed to clear favorites from localStorage", e);
+    }
+  };
 
-  return { favorites, toggleFavorite, isFavorite };
+  const isFavorite = (routeId: string) => favorites.includes(routeId.trim());
+
+  return { favorites, toggleFavorite, clearFavorites, isFavorite };
 }
