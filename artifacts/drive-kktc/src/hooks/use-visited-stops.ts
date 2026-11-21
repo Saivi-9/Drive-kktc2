@@ -9,8 +9,8 @@ export function useVisitedStops(routeId: string) {
       const saved = localStorage.getItem(key);
       if (saved) {
         const parsed: unknown = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.every((item): item is number => typeof item === "number")) {
-          setVisited(parsed);
+        if (Array.isArray(parsed) && parsed.every((item): item is number => typeof item === "number" && Number.isInteger(item) && item >= 0)) {
+          setVisited(Array.from(new Set(parsed)));
         }
       }
     } catch {
@@ -19,6 +19,7 @@ export function useVisitedStops(routeId: string) {
   }, [key]);
 
   const toggleVisited = (index: number) => {
+    if (!Number.isInteger(index) || index < 0) return;
     setVisited((current) => {
       const next = current.includes(index) ? current.filter((item) => item !== index) : [...current, index];
       try { localStorage.setItem(key, JSON.stringify(next)); } catch { /* optional persistence */ }
