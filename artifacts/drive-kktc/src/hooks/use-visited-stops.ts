@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function useVisitedStops(routeId: string) {
-  const key = `drivekktc-visited-${routeId}`;
+  const key = `drivekktc-visited-${routeId.trim()}`;
   const [visited, setVisited] = useState<number[]>([]);
 
   useEffect(() => {
@@ -32,5 +32,7 @@ export function useVisitedStops(routeId: string) {
     try { localStorage.removeItem(key); } catch { /* optional persistence */ }
   };
 
-  return { visited, toggleVisited, clearVisited };
+  const isStopVisited = (index: number) => Number.isInteger(index) && index >= 0 && visited.includes(index);
+
+  return { visited, visitedCount: visited.length, isStopVisited, toggleVisited, clearVisited };
 }
