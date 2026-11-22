@@ -46,5 +46,5 @@ export function useFavorites() {
 
   const isFavorite = (routeId: string) => favorites.includes(routeId.trim());
 
-  return { favorites, toggleFavorite, clearFavorites, isFavorite };
+  return { favorites, favoriteCount: favorites.length, toggleFavorite, clearFavorites, isFavorite };
 }
