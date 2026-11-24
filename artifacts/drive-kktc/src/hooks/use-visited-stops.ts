@@ -39,11 +39,23 @@ export function useVisitedStops(routeId: string) {
     return Math.min(100, Math.max(0, Math.round((visited.length / totalStops) * 100)));
   };
 
+  const getRemainingStopsCount = (totalStops: number): number => {
+    if (!Number.isFinite(totalStops) || totalStops <= 0) return 0;
+    return Math.max(0, Math.floor(totalStops) - visited.length);
+  };
+
+  const isRouteCompleted = (totalStops: number): boolean => {
+    if (!Number.isFinite(totalStops) || totalStops <= 0) return false;
+    return visited.length >= Math.floor(totalStops);
+  };
+
   return {
     visited,
     visitedCount: visited.length,
     isStopVisited,
     getCompletionPercentage,
+    getRemainingStopsCount,
+    isRouteCompleted,
     toggleVisited,
     clearVisited,
   };
