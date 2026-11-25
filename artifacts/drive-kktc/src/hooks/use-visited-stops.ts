@@ -49,12 +49,24 @@ export function useVisitedStops(routeId: string) {
     return visited.length >= Math.floor(totalStops);
   };
 
+  const getNextUnvisitedStopIndex = (totalStops: number): number | null => {
+    if (!Number.isFinite(totalStops) || totalStops <= 0) return null;
+    const count = Math.floor(totalStops);
+    for (let i = 0; i < count; i++) {
+      if (!visited.includes(i)) {
+        return i;
+      }
+    }
+    return null;
+  };
+
   return {
     visited,
     visitedCount: visited.length,
     isStopVisited,
     getCompletionPercentage,
     getRemainingStopsCount,
+    getNextUnvisitedStopIndex,
     isRouteCompleted,
     toggleVisited,
     clearVisited,
