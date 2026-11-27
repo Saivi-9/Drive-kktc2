@@ -75,6 +75,7 @@ export function useVisitedStops(routeId: string) {
   return {
     visited,
     visitedCount: visited.length,
+    hasStartedRoute: visited.length > 0,
     isStopVisited,
     getCompletionPercentage,
     getRemainingStopsCount,
